@@ -1,4 +1,4 @@
-#inlcude <cuda_runtime.h>
+#include <cuda_runtime.h>
 #include <cudnn.h>
 #include <iostream>
 #include <nvtx3/nvToolsExt.h>
