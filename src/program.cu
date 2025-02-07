@@ -65,9 +65,9 @@ int main(){
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> dis(50.0, 25.0);
 
-    MCC(cudaMalloc(*d_inp, sizeof(float)*input_size));
-    MCC(cudaMalloc(*d_fil, sizeof(float)*kernel_size)); // maybe I should use constant space in GPU for small kernels
-    MCC(cudaMalloc(*d_out, sizeof(float)*input_size));
+    MCC(cudaMalloc(&d_inp, sizeof(float)*input_size));
+    MCC(cudaMalloc(&d_fil, sizeof(float)*kernel_size)); // maybe I should use constant space in GPU for small kernels
+    MCC(cudaMalloc(&d_out, sizeof(float)*input_size));
 
     h_inp = new float[input_size];
     h_fil = new float[kernel_size];
