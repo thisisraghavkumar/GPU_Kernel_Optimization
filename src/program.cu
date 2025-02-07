@@ -1,5 +1,7 @@
 #include <cuda_runtime.h>
 #include <iostream>
+#include <iomanip>
+#include <random>
 
 #include "./kernels/mykernels.cuh"
 
