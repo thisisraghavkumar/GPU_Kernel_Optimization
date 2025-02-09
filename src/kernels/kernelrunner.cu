@@ -3,7 +3,7 @@
 // zeros are padded by assuming spilled values to be zero
 // stride is assumed to be 1 for simplicity
 // kernel is always odd square matrix
-void run_kernel(char *kernel_name, void (*invoke_kernel)(float*, int, int, float*, int, int, float *),float *dinp, int M, int N, float *dker, int m, int n, float *dout, float *hout, float *hout_ref, float *elapsed_time, std::mt19937 gen, bool useKernelFromConstants = false, int warmup_runs=1, int measurement_runs=50){
+void run_kernel(char *kernel_name, void (*invoke_kernel)(float*, int, int, float*, int, int, float *, bool),float *dinp, int M, int N, float *dker, int m, int n, float *dout, float *hout, float *hout_ref, float *elapsed_time, std::mt19937 gen, bool useKernelFromConstants = false, int warmup_runs=1, int measurement_runs=50){
     cudaEvent_t beg, end;
     MCC(cudaEventCreate(&beg));
     MCC(cudaEventCreate(&end));
@@ -19,16 +19,15 @@ void run_kernel(char *kernel_name, void (*invoke_kernel)(float*, int, int, float
         	std::cout <<"Error: Reference and my kernel results do not match at "<<randomRow<<", "<<randomCol << std::endl;
         	std::cout <<"Content of hout = "<<std::setprecision(32)<<hout[randomRow * n + randomCol]<<std::endl;
         	std::cout <<"Content of hout_ref = "<<std::setprecision(32)<<hout_ref[randomRow * n + randomCol]<<std::endl;
-        	return 1;
     	}
     }
     for(int i=0; i<warmup_runs-1; i++){
-        invoke_kernel(d_A, d_B, d_C, m, k, n);
+        invoke_kernel(dinp, M, N, dker, m, n, dout, useKernelFromConstants);
     }
     MCC(cudaEventRecord(beg));
     nvtxRangePush(kernel_name);
     for(int i=0; i<measurement_runs; i++){
-        invoke_kernel(d_A, d_B, d_C, m, k, n);
+        invoke_kernel(dinp, M, N, dker, m, n, dout, useKernelFromConstants);
         cudaDeviceSynchronize();
     }
     nvtxRangePop();
@@ -36,5 +35,4 @@ void run_kernel(char *kernel_name, void (*invoke_kernel)(float*, int, int, float
     MCC(cudaEventSynchronize(beg));
     MCC(cudaEventSynchronize(end));
     MCC(cudaEventElapsedTime(elapsed_time, beg, end));
-    return elapsed_time;
 }
