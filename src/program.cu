@@ -82,8 +82,8 @@ int main(){
     h_inp = new float[input_size];
     h_fil = new float[kernel_size];
     h_out = new float[input_size];
-    populate_array("Input", h_inp, input_size, gen, dis);
-    printMatrix(h_inp, M, N);
+    populate_array(h_inp, input_size, gen, dis);
+    printMatrix("Input",h_inp, M, N);
     populate_array(h_fil, kernel_size, gen, dis);
     printMatrix("Kernel", h_fil, m, n);
     MCC(cudaMemcpy(d_inp, h_inp, sizeof(float)*input_size, cudaMemcpyHostToDevice));
@@ -95,7 +95,6 @@ int main(){
     printMatrix("Output with kernel in memory", h_out_ref, M, N);
     invoke_mynaivekernel(d_inp, M, N, d_fil, m, n, d_out, true);
     MCC(cudaMemcpy(h_out_ref, d_out, sizeof(float)*input_size, cudaMemcpyDeviceToHost));
-    std
     printMatrix("Output with kernel as constant",h_out_ref, M, N);
 
     auto printRow = [](const std::string &name, float time, long long ops, int runs)
