@@ -117,6 +117,6 @@ int main(){
               << std::setw(20) << "GFLOP/S" << std::endl;
 
     std::cout << std::string(60, '-') << std::endl;
-    run_kernel("Naive kernel in memory", invoke_mynaivekernel, d_inp,M,N, d_fil, m, n, d_out, h_out, h_out_ref, elapsed_time, gen, false, 5, measurement_runs);
+    run_kernel("Naive kernel in memory", invoke_mynaivekernel, d_inp,M,N, d_fil, m, n, d_out, h_out, h_out_ref, &elapsed_time, gen, false, 5, measurement_runs);
     printRow("Naive kernel in memory", elapsed_time, numoperations, measurement_runs);
 }
