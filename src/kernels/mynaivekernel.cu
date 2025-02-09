@@ -55,8 +55,8 @@ void invoke_mynaivekernel(float *dinp, int M, int N, float *dfil, int m, int n, 
     dim3 blockDim(BLOCK_SIZE, BLOCK_SIZE);
     dim3 gridDim(CEILDIV(N,BLOCK_SIZE),CEILDIV(M,BLOCK_SIZE));
     if(useConstantKernel){
-        mynaive_convolution<<<blockDim,gridDim>>>(dinp,M,N,dfil,m,n,dout);
+        mynaive_convolution<<<gridDim,blockDim>>>(dinp,M,N,dfil,m,n,dout);
     }else{
-        mynaive_convolution<<<blockDim,gridDim>>>(dinp,M,N,dfil,m,n,dout);
+        mynaive_convolution<<<gridDim,blockDim>>>(dinp,M,N,dfil,m,n,dout);
     }
 }
