@@ -9,6 +9,18 @@ void run_kernel(const char *kernel_name, void (*invoke_kernel)(float*, int, int,
     MCC(cudaEventCreate(&end));
     int sizeC = M * N;
     invoke_kernel(dinp, M, N, dker, m, n, dout, useKernelFromConstants);
+    cudaError_t err = cudaGetLastError();  
+    if (err != cudaSuccess) {
+        std::cerr << "Kernel launch error: " << cudaGetErrorString(err) << std::endl;
+        return
+    }
+
+    // Force synchronization to catch errors that might happen asynchronously
+    cudaError_t syncErr = cudaDeviceSynchronize();
+    if (syncErr != cudaSuccess) {
+        std::cerr << "CUDA kernel execution error: " << cudaGetErrorString(syncErr) << std::endl;
+        return
+    }
     MCC(cudaMemcpy(hout, dout, sizeof(float)*sizeC, cudaMemcpyDeviceToHost));
     for(int i=0; i < 500; i++){
     	int randomRow = gen() % M;
@@ -23,12 +35,35 @@ void run_kernel(const char *kernel_name, void (*invoke_kernel)(float*, int, int,
     }
     for(int i=0; i<warmup_runs-1; i++){
         invoke_kernel(dinp, M, N, dker, m, n, dout, useKernelFromConstants);
+        cudaError_t err = cudaGetLastError();  
+        if (err != cudaSuccess) {
+            std::cerr << "Kernel launch error: " << cudaGetErrorString(err) << std::endl;
+            return
+        }
+
+        // Force synchronization to catch errors that might happen asynchronously
+        cudaError_t syncErr = cudaDeviceSynchronize();
+        if (syncErr != cudaSuccess) {
+            std::cerr << "CUDA kernel execution error: " << cudaGetErrorString(syncErr) << std::endl;
+            return
+        }
     }
     MCC(cudaEventRecord(beg));
     nvtxRangePush(kernel_name);
     for(int i=0; i<measurement_runs; i++){
         invoke_kernel(dinp, M, N, dker, m, n, dout, useKernelFromConstants);
-        cudaDeviceSynchronize();
+        cudaError_t err = cudaGetLastError();  
+        if (err != cudaSuccess) {
+            std::cerr << "Kernel launch error: " << cudaGetErrorString(err) << std::endl;
+            return;
+        }
+
+        // Force synchronization to catch errors that might happen asynchronously
+        cudaError_t syncErr = cudaDeviceSynchronize();
+        if (syncErr != cudaSuccess) {
+            std::cerr << "CUDA kernel execution error: " << cudaGetErrorString(syncErr) << std::endl;
+            return;
+        }
     }
     nvtxRangePop();
     MCC(cudaEventRecord(end));
