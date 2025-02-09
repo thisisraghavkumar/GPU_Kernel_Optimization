@@ -8,7 +8,7 @@ void run_kernel(char *kernel_name, void (*invoke_kernel)(float*, int, int, float
     MCC(cudaEventCreate(&beg));
     MCC(cudaEventCreate(&end));
     int sizeC = M * N;
-    invoke_kernel(dinp, M, N, dker, m, n, dout);
+    invoke_kernel(dinp, M, N, dker, m, n, dout, useKernelFromConstants);
     MCC(cudaMemcpy(hout, dout, sizeof(float)*sizeC, cudaMemcpyDeviceToHost));
     for(int i=0; i < 500; i++){
     	int randomRow = gen() % M;
