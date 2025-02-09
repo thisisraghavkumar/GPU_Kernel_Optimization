@@ -18,8 +18,6 @@
 
 #define CEILDIV(dividend, divisor) ((dividend + divisor - 1) / divisor)
 
-__constant__ float d_kernel_const[KERROW * KERCOL]
-
 // My Cuda Check has been shortened to MCC for ease
 #define MCC(call) \
     do                      \
@@ -29,10 +27,11 @@ __constant__ float d_kernel_const[KERROW * KERCOL]
             std::cerr<<"CUDA error in file "<<__FILE__<<" at line "<<__LINE__<<": "<<cudaGetErrorString(err)<<"\n"; \
             exit(EXIT_FAILURE);          \
         }                   \
-    } while (0);    \
+    } while (0);
 
+__constant__ float d_kernel_const[KERROW * KERCOL];
 void invoke_cudnn_conv(float *d_inp, int M, int N, float *d_kernel, int m, int n, float *d_out, float *elapsed_time, float *h_output, bool copy_output, int measurement_iterations, int warmup_iterations);
 void invoke_mynaivekernel(float *d_inp, int M, int N, float *d_kernel, int m, int n, float *d_out, bool useConstantKernel=false);
 
-void run_kernel(char *kernel_name, void (*invoke_kernel)(float*, int, int, float*, int, int, float *),float *dinp, int M, int N, float *dker, int m, int n, float *dout, float *hout, float *hout_ref, float *elapsed_time, std::mt19937 gen, bool useKernelFromConstants = false, int warmup_runs=1, int measurement_runs=50);
+void run_kernel(const char *kernel_name, void (*invoke_kernel)(float*, int, int, float*, int, int, float *),float *dinp, int M, int N, float *dker, int m, int n, float *dout, float *hout, float *hout_ref, float *elapsed_time, std::mt19937 gen, bool useKernelFromConstants = false, int warmup_runs=1, int measurement_runs=50);
 #endif //MYCONVKERNELS
