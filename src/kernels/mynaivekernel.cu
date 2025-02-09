@@ -28,7 +28,6 @@ __global__ void mynaive_convolution(float *dinp, int M, int N, float *dker, int 
 __global__ void mynaive_convolution_const(float *dinp, int M, int N, int m, int n, float *dout){
     int opRow = blockIdx.y * blockDim.y + threadIdx.y;
     int opCol = blockIdx.x * blockDim.x + threadIdx.x;
-    __constant__ float dker[m*n];
     if(opRow < M && opCol < N){
         float op = 0.0;
         int limH = m/2;
