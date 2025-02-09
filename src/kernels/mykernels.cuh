@@ -29,7 +29,7 @@
         }                   \
     } while (0);
 
-__constant__ float d_kernel_const[KERROW * KERCOL];
+//__constant__ float d_kernel_const[KERROW * KERCOL];
 void invoke_cudnn_conv(float *d_inp, int M, int N, float *d_kernel, int m, int n, float *d_out, float *elapsed_time, float *h_output, bool copy_output, int measurement_iterations, int warmup_iterations);
 void invoke_mynaivekernel(float *d_inp, int M, int N, float *d_kernel, int m, int n, float *d_out, bool useConstantKernel=false);
 

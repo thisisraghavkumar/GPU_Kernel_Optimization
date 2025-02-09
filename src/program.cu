@@ -119,4 +119,12 @@ int main(){
     std::cout << std::string(60, '-') << std::endl;
     run_kernel("Naive kernel in memory", invoke_mynaivekernel, d_inp,M,N, d_fil, m, n, d_out, h_out, h_out_ref, &elapsed_time, gen, false, 5, measurement_runs);
     printRow("Naive kernel in memory", elapsed_time, numoperations, measurement_runs);
+
+    MCC(cudaFree(&d_inp));
+    MCC(cudaFree(&d_fil));
+    MCC(cudaFree(&d_out));
+    free(h_inp);
+    free(h_fil);
+    free(h_out);
+    free(h_out_ref);
 }
