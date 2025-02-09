@@ -1,7 +1,7 @@
 #include "./kernels/mykernels.cuh"
 
 
-void printMatrix(char *heading, const float* matrix, int m, int n) {
+void printMatrix(const char *heading, const float* matrix, int m, int n) {
     const int width = 10;      // Column width
     const int precision = 4;   // Decimal precision
 
