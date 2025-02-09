@@ -89,14 +89,14 @@ int main(){
     printMatrix("Kernel", h_fil, m, n);
     MCC(cudaMemcpy(d_inp, h_inp, sizeof(float)*input_size, cudaMemcpyHostToDevice));
     MCC(cudaMemcpy(d_fil, h_fil, sizeof(float)*kernel_size, cudaMemcpyHostToDevice)); // maybe this will change if I choose to use constant space for small kernels
-    MCC(cudaMemcpyToSymbol(d_kernel_const, h_fil, sizeof(float)*kernel_size));
+    //MCC(cudaMemcpyToSymbol(d_kernel_const, h_fil, sizeof(float)*kernel_size));
 
     invoke_mynaivekernel(d_inp, M, N, d_fil, m, n, d_out, false);
     MCC(cudaMemcpy(h_out_ref, d_out, sizeof(float)*input_size, cudaMemcpyDeviceToHost));
     printMatrix("Output with kernel in memory", h_out_ref, M, N);
-    invoke_mynaivekernel(d_inp, M, N, d_fil, m, n, d_out, true);
-    MCC(cudaMemcpy(h_out_ref, d_out, sizeof(float)*input_size, cudaMemcpyDeviceToHost));
-    printMatrix("Output with kernel as constant",h_out_ref, M, N);
+    //invoke_mynaivekernel(d_inp, M, N, d_fil, m, n, d_out, true);
+    //MCC(cudaMemcpy(h_out_ref, d_out, sizeof(float)*input_size, cudaMemcpyDeviceToHost));
+    //printMatrix("Output with kernel as constant",h_out_ref, M, N);
 
     auto printRow = [](const std::string &name, float time, long long ops, int runs)
     {
@@ -117,6 +117,6 @@ int main(){
               << std::setw(20) << "GFLOP/S" << std::endl;
 
     std::cout << std::string(60, '-') << std::endl;
-
-    //printRow("CuDNN", elapsed_time, numoperations, measurement_runs);
+    run_kernel("Naive kernel in memory", invoke_mynaivekernel, d_inp,M,N, d_fil, m, n, d_out, h_out, h_out_ref, elapsed_time, gen, false, 5, measurement_runs);
+    printRow("Naive kernel in memory", elapsed_time, numoperations, measurement_runs);
 }

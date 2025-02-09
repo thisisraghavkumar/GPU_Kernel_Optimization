@@ -7,8 +7,8 @@
 #include <nvtx3/nvToolsExt.h>
 #include <random>
 
-#define INPROW 5LL
-#define INPCOL 5LL
+#define INPROW 4096LL
+#define INPCOL 4096LL
 #define KERROW 3LL
 #define KERCOL 3LL
 
