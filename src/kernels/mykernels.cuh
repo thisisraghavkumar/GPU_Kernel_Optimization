@@ -7,10 +7,10 @@
 #include <nvtx3/nvToolsExt.h>
 #include <random>
 
-#define INPROW 2048LL
-#define INPCOL 2048LL
-#define KERROW 5LL
-#define KERCOL 5LL
+#define INPROW 5LL
+#define INPCOL 5LL
+#define KERROW 3LL
+#define KERCOL 3LL
 
 #define BLOCK_SIZE 32
 #define WARP_SIZE 32

@@ -82,6 +82,7 @@ int main(){
     h_inp = new float[input_size];
     h_fil = new float[kernel_size];
     h_out = new float[input_size];
+    h_out_ref = new float[input_size];
     populate_array(h_inp, input_size, gen, dis);
     printMatrix("Input",h_inp, M, N);
     populate_array(h_fil, kernel_size, gen, dis);
