@@ -12,14 +12,14 @@ void run_kernel(const char *kernel_name, void (*invoke_kernel)(float*, int, int,
     cudaError_t err = cudaGetLastError();  
     if (err != cudaSuccess) {
         std::cerr << "Kernel launch error: " << cudaGetErrorString(err) << std::endl;
-        return
+        return;
     }
 
     // Force synchronization to catch errors that might happen asynchronously
     cudaError_t syncErr = cudaDeviceSynchronize();
     if (syncErr != cudaSuccess) {
         std::cerr << "CUDA kernel execution error: " << cudaGetErrorString(syncErr) << std::endl;
-        return
+        return;
     }
     MCC(cudaMemcpy(hout, dout, sizeof(float)*sizeC, cudaMemcpyDeviceToHost));
     for(int i=0; i < 500; i++){
@@ -38,14 +38,14 @@ void run_kernel(const char *kernel_name, void (*invoke_kernel)(float*, int, int,
         cudaError_t err = cudaGetLastError();  
         if (err != cudaSuccess) {
             std::cerr << "Kernel launch error: " << cudaGetErrorString(err) << std::endl;
-            return
+            return;
         }
 
         // Force synchronization to catch errors that might happen asynchronously
         cudaError_t syncErr = cudaDeviceSynchronize();
         if (syncErr != cudaSuccess) {
             std::cerr << "CUDA kernel execution error: " << cudaGetErrorString(syncErr) << std::endl;
-            return
+            return;
         }
     }
     MCC(cudaEventRecord(beg));
