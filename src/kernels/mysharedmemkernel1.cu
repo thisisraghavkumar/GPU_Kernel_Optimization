@@ -11,7 +11,7 @@ __global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m
     int sharedRow = threadIdx.y + (m/2);
     int sharedCol = threadIdx.x + (n/2);
     // coordinate of a cell in imSlice and dinp will be different
-    // the relation is imSlice_x = dinp_x + n/2 and inSlice_y = dinp_y + m/2
+    // the relation is imSlice_x = dinp_x + n/2 and imSlice_y = dinp_y + m/2
     // if thread lies inside the image
     if(opRow < M && opCol < N){
         //the top left cell will load the top left corner of the halo
@@ -19,9 +19,9 @@ __global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m
             for(int i=-1*(m/2); i <= 0; i++){
                 for(int j=-1*(n/2); j <= 0; j++){
                     if(opCol + j >= 0 && opCol + j < N && opRow + i >= 0 && opRow + i < M){
-                        inSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = dinp[(opRow + i) * N + (opCol + j)];
+                        imSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = dinp[(opRow + i) * N + (opCol + j)];
                     }else{
-                        inSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
+                        imSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
                     }
                 }
             }
@@ -30,9 +30,9 @@ __global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m
             for(int i=-1*(m/2); i <= 0; i++){
                 for(int j=0; j <= n/2; j++){
                     if(opCol + j >= 0 && opCol + j < N && opRow + i >= 0 && opRow + i < M){
-                        inSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = dinp[(opRow + i) * N + (opCol + j)];
+                        imSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = dinp[(opRow + i) * N + (opCol + j)];
                     }else{
-                        inSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
+                        imSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
                     }
                 }
             }
@@ -41,9 +41,9 @@ __global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m
             for(int i=0; i <= m/2; i++){
                 for(int j=-1*(n/2); j <= 0; j++){
                     if(opCol + j >= 0 && opCol + j < N && opRow + i >= 0 && opRow + i < M){
-                        inSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = dinp[(opRow + i) * N + (opCol + j)];
+                        imSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = dinp[(opRow + i) * N + (opCol + j)];
                     }else{
-                        inSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
+                        imSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
                     }
                 }
             }
@@ -52,9 +52,9 @@ __global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m
             for(int i=0; i <= m/2; i++){
                 for(int j=0; j <= n/2; j++){
                     if(opCol + j >= 0 && opCol + j < N && opRow + i >= 0 && opRow + i < M){
-                        inSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = dinp[(opRow + i) * N + (opCol + j)];
+                        imSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = dinp[(opRow + i) * N + (opCol + j)];
                     }else{
-                        inSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
+                        imSlice[(sharedRow + i) * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
                     }
                 }
             }
@@ -62,41 +62,41 @@ __global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m
             // thread on left edge will load a line to its left
             for(int j = -1*(n/2); j <= 0; j++){
                 if(opCol + j >= 0 && opCol + j < N){
-                    inSlice[sharedRow * (blockDim.x+n-1) + (sharedCol + j)] = dinp[opRow * N + (opCol + j)];
+                    imSlice[sharedRow * (blockDim.x+n-1) + (sharedCol + j)] = dinp[opRow * N + (opCol + j)];
                 } else {
-                    inSlice[sharedRow * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
+                    imSlice[sharedRow * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
                 }
             }
         } else if(threadIdx.x == blockDim.x-1) {
             // thread on right edge will load a line to its left
             for(int j = 0; j <= n/2; j++){
                 if(opCol + j >= 0 && opCol + j < N){
-                    inSlice[sharedRow * (blockDim.x+n-1) + (sharedCol + j)] = dinp[opRow * N + (opCol + j)];
+                    imSlice[sharedRow * (blockDim.x+n-1) + (sharedCol + j)] = dinp[opRow * N + (opCol + j)];
                 } else {
-                    inSlice[sharedRow * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
+                    imSlice[sharedRow * (blockDim.x+n-1) + (sharedCol + j)] = 0.0f;
                 }
             }
         } else if(threadIdx.y == 0) {
             // thread on top edge will load a line to its up
             for(int j = -1*(m/2); j <= 0; j++){
                 if(opRow + j >= 0 && opRow + j < M){
-                    inSlice[(sharedRow+j) * (blockDim.x+n-1) + sharedCol] = dinp[(opRow+j) * N + opCol];
+                    imSlice[(sharedRow+j) * (blockDim.x+n-1) + sharedCol] = dinp[(opRow+j) * N + opCol];
                 } else {
-                    inSlice[(sharedRow+j) * (blockDim.x+n-1) + sharedCol] = 0.0f;
+                    imSlice[(sharedRow+j) * (blockDim.x+n-1) + sharedCol] = 0.0f;
                 }
             }
         } else if(threadIdx.y == blockDim.y-1) {
             // thread on bottom edge will load a line to its bottom
             for(int j = 0; j <= m/2; j++){
                 if(opRow + j >= 0 && opRow + j < M){
-                    inSlice[(sharedRow+j) * (blockDim.x+n-1) + sharedCol] = dinp[(opRow+j) * N + opCol];
+                    imSlice[(sharedRow+j) * (blockDim.x+n-1) + sharedCol] = dinp[(opRow+j) * N + opCol];
                 } else {
-                    inSlice[(sharedRow+j) * (blockDim.x+n-1) + sharedCol] = 0.0f;
+                    imSlice[(sharedRow+j) * (blockDim.x+n-1) + sharedCol] = 0.0f;
                 }
             }
         } else {
             //every thread loads the cell it is centered on
-            inSlice[sharedRow * (blockDim.x+n-1) + sharedCol] = dinp[opRow * N + opCol];
+            imSlice[sharedRow * (blockDim.x+n-1) + sharedCol] = dinp[opRow * N + opCol];
         }
         if(threadIdx.x < m && threadIdx.y < n){
             sharedKernel[threadIdx.y * n + threadIdx.x] = dker[threadIdx.y * n + threadIdx.x];
