@@ -56,8 +56,8 @@ int main(){
 
     int M = INPROW; // input height
     int N = INPCOL; // input width
-    int m = KERROW;    // kernel height
-    int n = KERCOL;    // kernel width
+    const int m = KERROW;    // kernel height
+    const int n = KERCOL;    // kernel width
 
     int input_size = M*N;
     int kernel_size = m*n;

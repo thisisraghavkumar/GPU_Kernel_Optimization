@@ -51,7 +51,7 @@ __global__ void mynaive_convolution_const(float *dinp, int M, int N, int m, int 
 }
 */
 
-void invoke_mynaivekernel(float *dinp, int M, int N, float *dfil, int m, int n, float *dout, bool useConstantKernel){
+void invoke_mynaivekernel(float *dinp, int M, int N, float *dfil, const int m, const int n, float *dout, bool useConstantKernel){
     dim3 blockDim(BLOCK_SIZE, BLOCK_SIZE);
     dim3 gridDim(CEILDIV(N,BLOCK_SIZE),CEILDIV(M,BLOCK_SIZE));
     mynaive_convolution<<<gridDim,blockDim>>>(dinp,M,N,dfil,m,n,dout);

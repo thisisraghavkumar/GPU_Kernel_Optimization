@@ -3,7 +3,7 @@
 // zeros are padded by assuming spilled values to be zero
 // stride is assumed to be 1 for simplicity
 // kernel is always odd square matrix
-void run_kernel(const char *kernel_name, void (*invoke_kernel)(float*, int, int, float*, int, int, float *, bool),float *dinp, int M, int N, float *dker, int m, int n, float *dout, float *hout, float *hout_ref, float *elapsed_time, std::mt19937 gen, bool useKernelFromConstants, int warmup_runs, int measurement_runs){
+void run_kernel(const char *kernel_name, void (*invoke_kernel)(float*, int, int, float*, const int, const int, float *, bool),float *dinp, int M, int N, float *dker, const int m, const int n, float *dout, float *hout, float *hout_ref, float *elapsed_time, std::mt19937 gen, bool useKernelFromConstants, int warmup_runs, int measurement_runs){
     cudaEvent_t beg, end;
     MCC(cudaEventCreate(&beg));
     MCC(cudaEventCreate(&end));

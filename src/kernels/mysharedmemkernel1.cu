@@ -3,10 +3,11 @@
 // x and y directions of blocks correspond to that of image
 // boundary cells are included in shared memory
 // the kernel is smaller than block 32 x 32
-__global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m, int n, float *dout){
+template <const int m, const int n>
+__global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, float *dout){
     int opRow = blockIdx.y * blockDim.y + threadIdx.y;
     int opCol = blockIdx.x * blockDim.x + threadIdx.x;
-    __shared__ float imSlice[(blockDim.y+m-1)*(blockDim.x+n-1)];
+    __shared__ float imSlice[(BLOCK_SIZE+m-1)*(BLOCK_SIZE+n-1)];
     __shared__ float sharedKernel[m*n];
     int sharedRow = threadIdx.y + (m/2);
     int sharedCol = threadIdx.x + (n/2);
@@ -112,8 +113,8 @@ __global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m
     }
 }
 
-void invoke_mysharedmemkernel1(float *dinp, int M, int N, float *dker, int m, int n, float *dout, bool useConstantKernel){
+void invoke_mysharedmemkernel1(float *dinp, int M, int N, float *dker, const int m, const int n, float *dout, bool useConstantKernel){
     dim3 gridSize(CEILDIV(N, BLOCK_SIZE), CEILDIV(M, BLOCK_SIZE));
     dim3 blockSize(BLOCK_SIZE, BLOCK_SIZE);
-    mysharedmemkernel1<<<gridSize,blockSize>>>(dinp, M, N, dker, m, n, dout);
+    mysharedmemkernel1<m,n><<<gridSize,blockSize>>>(dinp, M, N, dker, dout);
 }
