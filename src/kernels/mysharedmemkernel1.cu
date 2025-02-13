@@ -116,5 +116,5 @@ __global__ void mysharedmemkernel1(float *dinp, int M, int N, float *dker, float
 void invoke_mysharedmemkernel1(float *dinp, int M, int N, float *dker, const int m, const int n, float *dout, bool useConstantKernel){
     dim3 gridSize(CEILDIV(N, BLOCK_SIZE), CEILDIV(M, BLOCK_SIZE));
     dim3 blockSize(BLOCK_SIZE, BLOCK_SIZE);
-    mysharedmemkernel1<m,n><<<gridSize,blockSize>>>(dinp, M, N, dker, dout);
+    mysharedmemkernel1<KERROW,KERCOL><<<gridSize,blockSize>>>(dinp, M, N, dker, dout);
 }
